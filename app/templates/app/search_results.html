@@ -1,0 +1,64 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block title %}{{types}} store{% endblock title %}
+{% block main-content %}
+<!-- <main class="container"> -->
+
+
+<div class="row" style="margin-top: 7vh; padding-top: 1.3vh;">
+	<!-- <div class="col-md-2 d-flex flex-column" style="border: 1px solid black; min-height: 100vh;">
+		<div class="flex-grow-1">
+			First in DOM, no order applied
+		</div>
+	</div> -->
+	<div class="col d-flex flex-wrap">
+		{% if items == True %}
+		<div class="col-sm-9"
+			style="min-height: 9vh;width: 100%;text-align: center;margin: 1vh 0vh;padding: 2vh 2vh;border: 1px solid black;">
+			<h2>Results for {{query}} </h2>
+		</div>
+		{% endif %}
+
+		{% if products %}
+		{% for product in products %}
+		<div class="card m-2 p-2 text-dark bg-opacity-25" style="width: 22rem; text-align: center;">
+			<img src="{{product.photo1.url}}" style="width: auto; " class="card-img-top" alt="...">
+			<div class="card-body">
+				<a href="{% url 'productdetail' productid=product.id %}"
+					style="text-decoration: none; color: black;">
+					<h5 class="card-title">{{product.product_name}}</h5>
+				</a>
+				<p>
+					<p>
+						{{ product.features|linebreaksbr }}
+					</p>
+					<b>&#8377 {{ product.discountprice }}</b>
+					&nbsp;
+					<span style="color: rgb(96, 96, 96); font-size: small;">
+						M.R.P:&#8377 <s>{{ product.price}} </s>
+					</span>
+					<span style="color: red;">
+						&nbsp; ({{product.discount}}% OFF)
+					</span>
+				</p>
+				<p class="card-title">FREE Delivery over ₹499. Fulfilled by Prestokart</p>
+				<a href="#" class="btn btn-primary">Add to cart</a>
+			</div>
+		</div>
+		{% endfor %}
+
+		{% else %}
+		<div class="" style="min-height: 56vh;width: 100vw;text-align: center;padding: 37vh;align-items: center;">
+			<h3>No Results found for {{query}}</h3>
+			<h5>Try checking your spelling or use more general terms</h2>
+		</div>
+		{% endif %}
+		<!-- Repeat the above div for other cards -->
+	</div>
+</div>
+
+<!-- </main> -->
+
+
+
+{% endblock main-content %}

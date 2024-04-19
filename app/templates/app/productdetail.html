@@ -1,0 +1,47 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block title %}Product Detail{% endblock title %}
+{% block main-content %}
+<div class="container my-5">
+	<div class="row" style="margin-top: 5vh; min-height: 80vh; ">
+		<div class="col-sm-6 text-center align-self-center">
+			<img src="{{product.photo1.url}}" style="position: relative;bottom: 150px;" alt="" class="img-fluid img-thumbnail">
+		</div>
+		<div class="col-sm-5 offset-sm-1">
+			<h2>{{product.product_name}}</h2>
+			<hr>
+			<h6>Product Description:</h6>
+			<p style="text-align: justify;">
+				 {{product.description|linebreaksbr }}</p> <br>
+			<h4>&#8377 {{ product.discountprice }} <small class="fw-light text-decoration-line-through">
+					{{product.price}}</small><span style="color: red;">&nbsp; ({{product.discount}}% off)</span></h4>
+					{% if product.size1 %}
+			<h6 class="mt-5">Size:
+				<select name="size" id="size">
+					{% if product.size1 %}
+					<option value="{{ product.size1 }}">{{ product.size1 }}</option>
+					{% endif %}
+					{% if product.size2 %}
+					<option value="{{ product.size2 }}">{{ product.size2 }}</option>
+					{% endif %}
+					{% if product.size3 %}
+					<option value="{{ product.size3 }}">{{ product.size3 }}</option>
+					{% endif %}
+					{% if product.size4 %}
+					<option value="{{ product.size4 }}">{{ product.size4 }}</option>
+					{% endif %}
+				</select>
+			</h6>
+			{% endif %}
+			<br>
+			<a href="{% url 'product_add-to-cart' productid=product.id %}" class="btn btn-primary shadow px-5 py-2">Add to Cart</a>
+			<a href="{% url 'buy-now' %}" class="btn btn-danger shadow px-5 py-2 ms-4">Buy Now</a>
+			<h5 class="mt-5">About this item</h5>
+			{{ product.features|linebreaksbr}}
+			  
+
+		</div>
+	</div>
+</div>
+ 
+{% endblock main-content %}

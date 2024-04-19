@@ -1,0 +1,59 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block title %}Customer Registration{% endblock title %}
+{% block main-content %}
+<div class="container">
+ <div class="row my-3">
+  <div class="col-sm-6 offset-sm-3">
+   <h3>Customer Registration</h3>
+   <hr>
+   {% if messages %}
+   <ul class="messages">
+	   {% for message in messages %}
+	   <li {% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+		   {% endfor %}
+   </ul>
+   {% endif %}
+
+   {% if errors %}
+   {% for field, error in errors.items %}
+   {{ field }}: {{ error }}
+   {% endfor %}
+   {% endif %}
+   <form action="" method="post" novalidate class="shadow p-5">
+	{% csrf_token %}
+    <div class="mb-3">
+		<label for="inputEmail4" class="form-label">Username</label>
+		{{form.username}}
+		<label for="inputEmail4" class="form-label">First Name</label>
+		{{form.first_name}}
+		<label for="inputEmail4" class="form-label">Last Name</label>
+		{{form.last_name}}
+		<label for="inputEmail4" class="form-label">Email</label>
+		{{form.email}}
+     <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+    </div>
+    <div class="mb-3">
+     <label for="inputPassword1" class="form-label">Password</label>
+	 {{form.password1}}
+    </div>
+    <div class="mb-3">
+     <label for="inputPassword2" class="form-label">Confirm Password</label>
+     {{form.password2}}
+    </div>
+    <div class="text-end">
+     <button type="submit" class="btn btn-danger">Submit</button>
+    </div>
+    <br>
+    <div class="text-center text-primary fw-bold"><small>Existing User ? <a href="{% url 'login' %}"
+       class="text-danger">Login Now</a> </small></div>
+    {% if form.non_field_errors %}
+    {% for error in form.non_field_errors %}
+    <p class="alert alert-danger my-3">{{error}}</p>
+    {% endfor %}
+    {% endif %}
+   </form>
+  </div>
+ </div>
+</div>
+{% endblock main-content %}
