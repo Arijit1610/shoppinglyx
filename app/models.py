@@ -69,3 +69,48 @@ class Addtocart(models.Model):
 		return f"{self.userid.id}-{self.product_id}"
 	def total(self):
 		return self.qty * self.product_id.discountprice()
+
+class Address(models.Model):
+	statename = [
+        ("Andhra Pradesh", "Andhra Pradesh"),
+        ("Arunachal Pradesh", "Arunachal Pradesh"),
+        ("Assam", "Assam"),
+        ("Bihar", "Bihar"),
+        ("Chhattisgarh", "Chhattisgarh"),
+        ("Goa", "Goa"),
+        ("Gujarat", "Gujarat"),
+        ("Haryana", "Haryana"),
+        ("Himachal Pradesh", "Himachal Pradesh"),
+        ("Jharkhand", "Jharkhand"),
+        ("Karnataka", "Karnataka"),
+        ("Kerala", "Kerala"),
+        ("Madhya Pradesh", "Madhya Pradesh"),
+        ("Maharashtra", "Maharashtra"),
+        ("Manipur", "Manipur"),
+        ("Meghalaya", "Meghalaya"),
+        ("Mizoram", "Mizoram"),
+        ("Nagaland", "Nagaland"),
+        ("Odisha", "Odisha"),
+        ("Punjab", "Punjab"),
+        ("Rajasthan", "Rajasthan"),
+        ("Sikkim", "Sikkim"),
+        ("Tamil Nadu", "Tamil Nadu"),
+        ("Telangana", "Telangana"),
+        ("Tripura", "Tripura"),
+        ("Uttar Pradesh", "Uttar Pradesh"),
+        ("Uttarakhand", "Uttarakhand"),
+        ("West Bengal", "West Bengal"),
+    ]
+	userid = models.ForeignKey(User,on_delete=models.CASCADE)
+	name =  models.CharField(max_length = 50, blank = False)
+	phonenumber = models.DecimalField(max_digits=10, decimal_places=0, default = None)
+	address1 = models.CharField(max_length = 50, blank = False)
+	address2 = models.CharField(max_length = 50, blank = False)
+	city = models.CharField(max_length = 50, blank = False)
+	state = models.CharField(max_length = 50, blank = False, choices = statename)
+	zipcode = models.DecimalField(max_digits=6, decimal_places=0)
+
+	def __str__(self):
+		return f"{self.userid.username} {self.name}"
+
+	

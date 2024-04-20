@@ -33,13 +33,17 @@ def activateEmail(request, user, to_email):
 
 def home(request):
 	products = Product.objects.all()
-	user_instance = User.objects.get(id=request.user.id)
-	carts = Addtocart.objects.filter(userid=user_instance)
-	# products = Product.objects.all()
-	print(len(carts))
-	print(products)
+	carts = []
+
+	User = get_user_model()
+	if request.user.is_authenticated:
+		user_instance = User.objects.get(id=request.user.id)
+		carts = Addtocart.objects.filter(userid=user_instance)
+	else:
+		# Handle the case where the user does not exist
+		user_instance = None
 	context = {
-		"products" : products,
+		"products": products,
 		"noofitems" : len(carts)
 	}
 

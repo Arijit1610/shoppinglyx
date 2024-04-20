@@ -46,14 +46,14 @@
 
 {% block main-content %}
 <!-- 1st Product Slider -->
-<div class="m-3">
+<div class="mx-3">
 	<h2>Best Deals on Eletronices</h2>
 	<!-- Slider 1 -->
 	<div class="owl-carousel" id="slider1">
 		{% for product in products %}
 		<a href="{% url 'productdetail'  productid=product.id %}" class="btn">
 			<div class="item"><img src="{{product.photo1.url}}" alt="" height="200px"><span
-					class="">{{product.product_name}}...</span><br><span class="fs-5">{{product.discountprice}}</span>
+					class="">{{ product.product_name|slice:":7" }}...</span><br><span class="fs-5">{{product.discountprice}}</span>
 			</div>
 		</a>
 		{% endfor %}
@@ -104,36 +104,10 @@
 		{% for product in products %}
 		<a href="{% url 'productdetail' productid=product.id %}" class="btn">
 			<div class="item"><img src="{{product.photo1.url}}" alt="" height="200px"><span
-					class="">{{product.company_name}}</span><br><span class="fs-5">{{product.discountprice}}</span>
+					class="">{{product.product_name|slice:":7" }}</span><br><span class="fs-5">{{product.discountprice}}</span>
 			</div>
 		</a>
 		{% endfor %}
-		<div>
-			<div class="item"><img src="{% static 'app/images/product/12.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 1</span><br><span class="fs-5">Rs. 500</span></div>
-			<div class="item"><img src="{% static 'app/images/product/11.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 2</span><br><span class="fs-5">Rs. 300</span></div>
-			<div class="item"><img src="{% static 'app/images/product/10.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 3</span><br><span class="fs-5">Rs. 100</span></div>
-			<div class="item"><img src="{% static 'app/images/product/9.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 4</span><br><span class="fs-5">Rs. 700</span></div>
-			<div class="item"><img src="{% static 'app/images/product/8.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 5</span><br><span class="fs-5">Rs. 500</span></div>
-			<div class="item"><img src="{% static 'app/images/product/11.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 6</span><br><span class="fs-5">Rs. 400</span></div>
-			<div class="item"><img src="{% static 'app/images/product/5.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 7</span><br><span class="fs-5">Rs. 500</span></div>
-			<div class="item"><img src="{% static 'app/images/product/11.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 8</span><br><span class="fs-5">Rs. 300</span></div>
-			<div class="item"><img src="{% static 'app/images/product/12.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 9</span><br><span class="fs-5">Rs. 600</span></div>
-			<div class="item"><img src="{% static 'app/images/product/7.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 10</span><br><span class="fs-5">Rs. 900</span></div>
-			<div class="item"><img src="{% static 'app/images/product/6.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 11</span><br><span class="fs-5">Rs. 100</span></div>
-			<div class="item"><img src="{% static 'app/images/product/10.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 12</span><br><span class="fs-5">Rs. 200</span></div>
-		</div>
 	</div>
 </div>
 <div class="mx-3">
@@ -143,36 +117,10 @@
 		{% for cosmetics in cosmeticses %}
 		<a href="{% url 'productdetail' producttype=cosmetics.product_type productid=cosmetics.id %}" class="btn">
 			<div class="item"><img src="{{cosmetics.photo1.url}}" alt="" height="200px"><span
-					class="">{{cosmetics.company_name}}</span><br><span class="fs-5">{{cosmetics.discountprice}}</span>
+					class="">{{cosmetics.product_name|slice:":7" }}</span><br><span class="fs-5">{{cosmetics.discountprice}}</span>
 			</div>
 		</a>
 		{% endfor %}
-		<div>
-			<div class="item"><img src="{% static 'app/images/product/12.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 1</span><br><span class="fs-5">Rs. 500</span></div>
-			<div class="item"><img src="{% static 'app/images/product/11.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 2</span><br><span class="fs-5">Rs. 300</span></div>
-			<div class="item"><img src="{% static 'app/images/product/10.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 3</span><br><span class="fs-5">Rs. 100</span></div>
-			<div class="item"><img src="{% static 'app/images/product/9.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 4</span><br><span class="fs-5">Rs. 700</span></div>
-			<div class="item"><img src="{% static 'app/images/product/8.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 5</span><br><span class="fs-5">Rs. 500</span></div>
-			<div class="item"><img src="{% static 'app/images/product/11.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 6</span><br><span class="fs-5">Rs. 400</span></div>
-			<div class="item"><img src="{% static 'app/images/product/5.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 7</span><br><span class="fs-5">Rs. 500</span></div>
-			<div class="item"><img src="{% static 'app/images/product/11.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 8</span><br><span class="fs-5">Rs. 300</span></div>
-			<div class="item"><img src="{% static 'app/images/product/12.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 9</span><br><span class="fs-5">Rs. 600</span></div>
-			<div class="item"><img src="{% static 'app/images/product/7.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 10</span><br><span class="fs-5">Rs. 900</span></div>
-			<div class="item"><img src="{% static 'app/images/product/6.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 11</span><br><span class="fs-5">Rs. 100</span></div>
-			<div class="item"><img src="{% static 'app/images/product/10.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 12</span><br><span class="fs-5">Rs. 200</span></div>
-		</div>
 	</div>
 </div>
 <div class="mx-3">
@@ -183,37 +131,12 @@
 		<a href="{% url 'productdetail' producttype=homeandkitchen.product_type productid=homeandkitchen.id %}"
 			class="btn">
 			<div class="item"><img src="{{homeandkitchen.photo1.url}}" alt="" height="200px"><span
-					class="">{{homeandkitchen.company_name}}</span><br><span
+					class="">{{homeandkitchen.product_name|slice:":7" }}</span><br><span
 					class="fs-5">{{homeandkitchen.discountprice}}</span>
 			</div>
 		</a>
 		{% endfor %}
-		<div>
-			<div class="item"><img src="{% static 'app/images/product/12.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 1</span><br><span class="fs-5">Rs. 500</span></div>
-			<div class="item"><img src="{% static 'app/images/product/11.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 2</span><br><span class="fs-5">Rs. 300</span></div>
-			<div class="item"><img src="{% static 'app/images/product/10.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 3</span><br><span class="fs-5">Rs. 100</span></div>
-			<div class="item"><img src="{% static 'app/images/product/9.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 4</span><br><span class="fs-5">Rs. 700</span></div>
-			<div class="item"><img src="{% static 'app/images/product/8.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 5</span><br><span class="fs-5">Rs. 500</span></div>
-			<div class="item"><img src="{% static 'app/images/product/11.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 6</span><br><span class="fs-5">Rs. 400</span></div>
-			<div class="item"><img src="{% static 'app/images/product/5.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 7</span><br><span class="fs-5">Rs. 500</span></div>
-			<div class="item"><img src="{% static 'app/images/product/11.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 8</span><br><span class="fs-5">Rs. 300</span></div>
-			<div class="item"><img src="{% static 'app/images/product/12.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 9</span><br><span class="fs-5">Rs. 600</span></div>
-			<div class="item"><img src="{% static 'app/images/product/7.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 10</span><br><span class="fs-5">Rs. 900</span></div>
-			<div class="item"><img src="{% static 'app/images/product/6.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 11</span><br><span class="fs-5">Rs. 100</span></div>
-			<div class="item"><img src="{% static 'app/images/product/10.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 12</span><br><span class="fs-5">Rs. 200</span></div>
-		</div>
+		
 	</div>
 </div>
 <div class="mx-3">
@@ -223,36 +146,10 @@
 		{% for book in books %}
 		<a href="{% url 'productdetail' producttype=book.product_type productid=book.id %}" class="btn">
 			<div class="item"><img src="{{book.photo1.url}}" alt="" height="200px"><span
-					class="">{{book.company_name}}</span><br><span class="fs-5">{{book.discountprice}}</span>
+					class="">{{book.product_name|slice:":7" }}</span><br><span class="fs-5">{{book.discountprice}}</span>
 			</div>
 		</a>
 		{% endfor %}
-		<div>
-			<div class="item"><img src="{% static 'app/images/product/12.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 1</span><br><span class="fs-5">Rs. 500</span></div>
-			<div class="item"><img src="{% static 'app/images/product/11.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 2</span><br><span class="fs-5">Rs. 300</span></div>
-			<div class="item"><img src="{% static 'app/images/product/10.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 3</span><br><span class="fs-5">Rs. 100</span></div>
-			<div class="item"><img src="{% static 'app/images/product/9.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 4</span><br><span class="fs-5">Rs. 700</span></div>
-			<div class="item"><img src="{% static 'app/images/product/8.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 5</span><br><span class="fs-5">Rs. 500</span></div>
-			<div class="item"><img src="{% static 'app/images/product/11.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 6</span><br><span class="fs-5">Rs. 400</span></div>
-			<div class="item"><img src="{% static 'app/images/product/5.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 7</span><br><span class="fs-5">Rs. 500</span></div>
-			<div class="item"><img src="{% static 'app/images/product/11.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 8</span><br><span class="fs-5">Rs. 300</span></div>
-			<div class="item"><img src="{% static 'app/images/product/12.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 9</span><br><span class="fs-5">Rs. 600</span></div>
-			<div class="item"><img src="{% static 'app/images/product/7.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 10</span><br><span class="fs-5">Rs. 900</span></div>
-			<div class="item"><img src="{% static 'app/images/product/6.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 11</span><br><span class="fs-5">Rs. 100</span></div>
-			<div class="item"><img src="{% static 'app/images/product/10.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 12</span><br><span class="fs-5">Rs. 200</span></div>
-		</div>
 	</div>
 </div>
 <div class="mx-3">
@@ -262,36 +159,10 @@
 		{% for sport in sports %}
 		<a href="{% url 'productdetail' producttype=sport.product_type productid=sport.id %}" class="btn">
 			<div class="item"><img src="{{sport.photo1.url}}" alt="" height="200px"><span
-					class="">{{sport.company_name}}</span><br><span class="fs-5">{{sport.discountprice}}</span>
+					class="">{{sport.product_name|slice:":7" }}</span><br><span class="fs-5">{{sport.discountprice}}</span>
 			</div>
 		</a>
 		{% endfor %}
-		<div>
-			<div class="item"><img src="{% static 'app/images/product/12.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 1</span><br><span class="fs-5">Rs. 500</span></div>
-			<div class="item"><img src="{% static 'app/images/product/11.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 2</span><br><span class="fs-5">Rs. 300</span></div>
-			<div class="item"><img src="{% static 'app/images/product/10.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 3</span><br><span class="fs-5">Rs. 100</span></div>
-			<div class="item"><img src="{% static 'app/images/product/9.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 4</span><br><span class="fs-5">Rs. 700</span></div>
-			<div class="item"><img src="{% static 'app/images/product/8.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 5</span><br><span class="fs-5">Rs. 500</span></div>
-			<div class="item"><img src="{% static 'app/images/product/11.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 6</span><br><span class="fs-5">Rs. 400</span></div>
-			<div class="item"><img src="{% static 'app/images/product/5.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 7</span><br><span class="fs-5">Rs. 500</span></div>
-			<div class="item"><img src="{% static 'app/images/product/11.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 8</span><br><span class="fs-5">Rs. 300</span></div>
-			<div class="item"><img src="{% static 'app/images/product/12.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 9</span><br><span class="fs-5">Rs. 600</span></div>
-			<div class="item"><img src="{% static 'app/images/product/7.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 10</span><br><span class="fs-5">Rs. 900</span></div>
-			<div class="item"><img src="{% static 'app/images/product/6.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 11</span><br><span class="fs-5">Rs. 100</span></div>
-			<div class="item"><img src="{% static 'app/images/product/10.jpg' %}" alt="" height="200px"><span
-					class="fw-bold">Product 12</span><br><span class="fs-5">Rs. 200</span></div>
-		</div>
 	</div>
 </div>
 <!-- End 2nd Product Slider -->

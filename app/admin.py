@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Product, Addtocart, Orders, Category
+from .models import Product, Addtocart, Orders, Category, Address
 from django.utils.safestring import mark_safe
    
 
@@ -27,6 +27,10 @@ admin.site.register(Addtocart,AddtocartAdmin)
 class CategoryAdmin(admin.ModelAdmin):
 	list_display = ["product_type"]
 admin.site.register(Category,CategoryAdmin)
+
+class AddressAdmin(admin.ModelAdmin):
+	list_display = ["userid","name","address1","state","city","zipcode"]
+admin.site.register(Address, AddressAdmin)
 
 admin.site.site_header = "Prestocart Admin Panel"
 admin.site.site_title = "Prestocart Admin Portal"
