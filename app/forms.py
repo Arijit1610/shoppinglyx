@@ -2,6 +2,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, Pass
 from django.contrib.auth.models import User
 from django import forms
 from django.contrib.auth import password_validation
+from .models import Address
 
 class RegistrationForm(UserCreationForm):
 	def __init__(self, *args, **kwargs):
@@ -48,3 +49,24 @@ class MyPasswordChangeForm(PasswordChangeForm):
 	old_password = forms.CharField(label = ("Old Password"), strip = False, widget = forms.PasswordInput(attrs={'autocomplete': 'current-password','autofocus':True,'class':'form-control'}))
 	new_password1 = forms.CharField(label = ("New Password"), strip = False, widget = forms.PasswordInput(attrs={'autocomplete': 'current-password','autofocus':True,'class':'form-control'}),help_text=password_validation.password_validators_help_text_html())
 	new_password2 = forms.CharField(label = ("Confirm New Password"), strip = False, widget = forms.PasswordInput(attrs={'autocomplete': 'current-password','autofocus':True,'class':'form-control'}))
+
+class AddressForm(forms.ModelForm):
+    class Meta:
+        model = Address
+        fields = ['name', 'phonenumber', 'address1', 'address2', 'city', 'state', 'zipcode']
+        widgets = {
+            'phonenumber': forms.TextInput(attrs={'placeholder': 'Enter your phone number','class':'form-control'}),
+            'zipcode': forms.TextInput(attrs={'placeholder': 'Enter your zip code', 'class':'form-control'}),
+        }
+        labels = {
+            'name': 'Full Name',
+            'phonenumber': 'Phone Number',
+            'address1': 'Address Line 1',
+            'address2': 'Address Line 2',
+            'city': 'City',
+            'state': 'State',
+            'zipcode': 'Zip Code',
+        }
+        help_texts = {
+            'phonenumber': 'Enter a 10-digit phone number without spaces or dashes.',
+        }

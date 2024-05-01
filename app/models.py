@@ -38,30 +38,16 @@ class Product(models.Model):
 		return int((self.price) - int((self.discount/100) * float(self.price)))
 
 
-class Orders(models.Model):
-	userid = models.ForeignKey(User, on_delete=models.CASCADE)
-	product_id = models.ForeignKey(Product, on_delete = models.CASCADE)
-	qty = models.IntegerField()
-	status = models.CharField(max_length=20, default="Pending", choices={
-		"Pending": "Pending",
-		"Accepted": "Accepted",
-		"Shiping": "Shiping",
-		"Out for Delivery": "Out for Delivery",
-		"Delivered": "Deliverd",
-		"Canceled": "Canceled"
-	})
-	created_at = models.DateTimeField(auto_now_add=True)
-	updated = models.DateTimeField(auto_now=True)
-
-
-	def __str__(self):
-		return f"{self.userid.id}-{self.product_id}"
 
 
 class Addtocart(models.Model):
 	userid = models.ForeignKey(User, on_delete=models.CASCADE)
 	product_id = models.ForeignKey(Product,on_delete=models.CASCADE)
 	qty = models.IntegerField()
+	is_paid = models.BooleanField(default=False)
+	rozorpay_order_id = models.CharField(null=True, blank=True,max_length=100)
+	rozorpay_order_payment_id = models.CharField(null=True, blank=True,max_length=100)
+	rozorpay_order_signature = models.CharField(null=True, blank=True,max_length=100)
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated = models.DateTimeField(auto_now=True)
 
@@ -114,3 +100,24 @@ class Address(models.Model):
 		return f"{self.userid.username} {self.name}"
 
 	
+class Orders(models.Model):
+	userid = models.ForeignKey(User, on_delete=models.CASCADE)
+	product_id = models.ForeignKey(Product, on_delete = models.CASCADE)
+	qty = models.IntegerField()
+	status = models.CharField(max_length=20, default="Pending", choices={
+		"Pending": "Pending",
+		"Accepted": "Accepted",
+		"Shiping": "Shiping",
+		"Out for Delivery": "Out for Delivery",
+		"Delivered": "Deliverd",
+		"Canceled": "Canceled"
+	})
+	address = models.ForeignKey(Address, on_delete=models.CASCADE, default=None)
+	
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated = models.DateTimeField(auto_now=True)
+
+
+
+	def __str__(self):
+		return f"{self.userid.id}-{self.product_id}"

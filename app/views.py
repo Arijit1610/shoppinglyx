@@ -13,7 +13,12 @@ from django.contrib import messages
 from .tokens import account_activation_token
 from django.contrib.auth.models import User
 from .models import *
+import razorpay
+from django.conf import settings
+from django.views.decorators.csrf import csrf_exempt
 
+client = razorpay.Client(
+	auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
 
 def activateEmail(request, user, to_email):
 	mail_subject = 'Activate your user account.'
@@ -32,7 +37,32 @@ def activateEmail(request, user, to_email):
 		messages.error(request, f'Problem sending confirmation email to {to_email}, check if you typed it correctly.')
 
 def home(request):
-	products = Product.objects.all()
+	fashion = Product.objects.filter(product_type__product_type ="Clothing")
+	eletronices = Product.objects.filter(product_type__product_type="Electronices")
+	print(fashion)
+	print(eletronices)
+	#  = Product.objects.filter(product_type = '')
+	# fashion = Product.objects.filter(product_type = 'clothing')
+	# fashion = Product.objects.filter(product_type = 'clothing')
+	carts = []
+
+	User = get_user_model()
+	if request.user.is_authenticated:
+		user_instance = User.objects.get(id=request.user.id)
+		carts = Addtocart.objects.filter(userid=user_instance)
+	else:
+		user_instance = None
+	context = {
+		# "products": products,
+		"noofitems" : len(carts),
+		"electronices" : eletronices,
+		"fashions" :fashion
+	}
+
+	return render(request, 'app/home.html', context)
+
+def product_detail(request,productid):
+	product = Product.objects.get(id=productid)
 	carts = []
 
 	User = get_user_model()
@@ -43,16 +73,8 @@ def home(request):
 		# Handle the case where the user does not exist
 		user_instance = None
 	context = {
-		"products": products,
-		"noofitems" : len(carts)
-	}
-
-	return render(request, 'app/home.html', context)
-
-def product_detail(request,productid):
-	product = Product.objects.get(id=productid)
-	context = {
 		"product" : product,
+		"noofitems" : len(carts)
 	}
 	# print(product.product_type)
 
@@ -74,12 +96,14 @@ def add_to_cart(request):
 			total = total + (cart.product_id.discountprice() * cart.qty)
 			shiping = shiping + (cart.qty*40)
 	alltotal = total+shiping
+	
+
 	context = {
 		"items" : carts,
 		"total" :total,
 		"shiping": shiping,
 		"alltotal": alltotal,
-		"noofitems" : len(carts)
+		"noofitems" : len(carts),
 	}
 	return render(request, 'app/addtocart.html',context)
 @login_required(login_url="login")
@@ -97,16 +121,70 @@ def product_add_to_cart(request,productid):
 
 def buy_now(request):
 	return render(request, 'app/buynow.html')
-
+@login_required(login_url="login")
 def profile(request):
-	return render(request, 'app/profile.html')
+	User = get_user_model()
+	if request.user.is_authenticated:
+		user_instance = User.objects.get(id=request.user.id)
+		carts = Addtocart.objects.filter(userid=user_instance)
+	if request.method == 'POST':
+		name = request.POST.get('name')
+		phonenumber  = request.POST.get('phonenumber')
+		address1  = request.POST.get('address1')
+		address2  = request.POST.get('address2')
+		city  = request.POST.get('city')
+		state  = request.POST.get('state')
+		zipcode  = request.POST.get('zipcode')
+	try:
+		address = Address(userid = user_instance, name = name, phonenumber = phonenumber, address1 = address1, address2 = address2, city = city, state = state, zipcode = zipcode)
+		address.save()
+	except:
+		pass
+	context = {
+		# "product" : product,
+		"noofitems" : len(carts),
+		"states" : Address.statename
+	}
+
+	return render(request, 'app/profile.html',context)
 
 def address(request):
-	return render(request, 'app/address.html')
+	carts = []
+	addreses = []
+	User = get_user_model()
+	if request.user.is_authenticated:
+		user_instance = User.objects.get(id=request.user.id)
+		carts = Addtocart.objects.filter(userid=user_instance)
+		addreses = Address.objects.filter(userid = user_instance)
+	else:
+		# Handle the case where the user does not exist
+		user_instance = None
+	context = {
+		# "products": products,
+		"noofitems" : len(carts),
+		"addreses" : addreses
+
+	}
+
+	return render(request, 'app/address.html',context)
 
 def orders(request):
+	carts = []
+
+	User = get_user_model()
+	if request.user.is_authenticated:
+		user_instance = User.objects.get(id=request.user.id)
+		carts = Addtocart.objects.filter(userid=user_instance)
+	else:
+		# Handle the case where the user does not exist
+		user_instance = None
+	context = {
+		# "products": products,
+		"noofitems" : len(carts)
+	}
+
 	# orders = Orders(product_type =  )
-	return render(request, 'app/orders.html')
+	return render(request, 'app/orders.html',context)
 
 @login_required(login_url="login")
 def change_password(request):
@@ -114,7 +192,21 @@ def change_password(request):
 	return render(request, 'app/changepassword.html')
 
 def mobile(request):
-	return render(request, 'app/mobile.html')
+	carts = []
+
+	User = get_user_model()
+	if request.user.is_authenticated:
+		user_instance = User.objects.get(id=request.user.id)
+		carts = Addtocart.objects.filter(userid=user_instance)
+	else:
+		# Handle the case where the user does not exist
+		user_instance = None
+	context = {
+		# "products": products,
+		"noofitems" : len(carts)
+	}
+
+	return render(request, 'app/mobile.html',context)
 
 def loginpage(request):
 	if request.user.is_authenticated:
@@ -160,7 +252,7 @@ def loginpage(request):
 					user = User.objects.get(username=username)
 				print("block7")
 				messages.error(
-					request, "Incorrect Password!!! Please Try Again")
+					request, "Incorrect Password!!! Please Try Again or your account is not acctivated yet please activate your account")
 			except:
 				print("block8")
 				messages.error(
@@ -196,7 +288,7 @@ def customerregistration(request):
 			print("else block")
 			errors = form.errors
 			print(errors)
-			return render(request, 'app/customerregistration.html', {'form': form, 'errors': errors})
+			# return render(request, 'app/customerregistration.html', {'form': form, 'errors': errors})
 			username_error = None
 			email_error = None
 			password_error = None
@@ -216,8 +308,9 @@ def checkout(request):
 	User = get_user_model()
 	user_instance = User.objects.get(id=request.user.id)
 	carts = Addtocart.objects.filter(userid=user_instance)
+	addreses = Address.objects.filter(userid = user_instance)
 	# products = Product.objects.all()
-	print(len(carts))
+	# print(len(carts))
 	total = 0
 	shiping = 0
 	for cart in carts:
@@ -225,14 +318,37 @@ def checkout(request):
 			total = total + (cart.product_id.discountprice() * cart.qty)
 			shiping = shiping + (cart.qty*40)
 	alltotal = total+shiping
+	paisa = alltotal*100
+
+	payment = client.order.create({
+		"amount": paisa,
+		"currency": "INR",
+		"receipt": "receipt#1",
+		"notes": {
+			"key1": "value3",
+			"key2": "value2"
+		}
+	})
+	for cart in carts:
+		cart.rozorpay_order_id = payment['id']
+		cart.save()
+	print(payment['id'])
+	if request.method == 'POST':
+		addressid = request.POST.get('addressinput')
+		print(addressid)
+	# allorder = client.order.fetch('order_O3eyrIuiNq7XkM')
+	# print(allorder)
+
 	context = {
 		"items" : carts,
 		"total" :total,
 		"shiping": shiping,
 		"alltotal": alltotal,
 		"noofitems" : len(carts),
-		# "user" :user_instance
-	}
+		"addreses" : addreses,
+		"paisa" : paisa,
+		"payment" : payment
+	} 
 	return render(request, 'app/checkout.html',context)
 
 
@@ -264,6 +380,15 @@ def activate(request, uidb64, token):
 
 
 def searchProducts(request):
+	carts = []
+
+	User = get_user_model()
+	if request.user.is_authenticated:
+		user_instance = User.objects.get(id=request.user.id)
+		carts = Addtocart.objects.filter(userid=user_instance)
+	else:
+		# Handle the case where the user does not exist
+		user_instance = None
 	query = request.GET.get('q')
 	if query == "":
 		return redirect('home')
@@ -281,7 +406,29 @@ def searchProducts(request):
 	context = {
 		'products': products,
 		'query': query,
-		'items' : items
+		'items' : items,
+		"noofitems" : len(carts)
 	}
 	
-	return render(request, 'app/search_results.html', context)
+	return render(request, 'app/search_results.html', context)\
+
+@csrf_exempt
+def success(request):
+	order_id = request.GET.get('order_id')
+	# print(order_id)
+	checkorder = client.order.fetch(order_id)
+	# print(checkorder)
+
+	carts = Addtocart.objects.filter(rozorpay_order_id = order_id)
+	# print(carts)
+	if carts:
+		for cart in carts:
+			# print(checkorder['status'])
+			if checkorder['status'] == 'paid':
+				cart.is_paid = True
+				cart.save()
+				return HttpResponse("payment success")
+			else:
+				return HttpResponse("payment failed")
+	else:
+		return HttpResponse("Something went Wrong")
