@@ -17,106 +17,74 @@
 				</div>
 			</div>
 			{% endfor %}
-			
-			
+
+
 		</div>
 		<div class="col-sm-4 offset-sm-1">
 			<!-- <div class="card-body"> -->
-					<h4>Total Amount</h4>
-					<hr>
-					<ul class="list-group">
-						<li
-							class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
-							Amount<span>{{total}}</span></li>
-						<li class="list-group-item d-flex justify-content-between align-items-center px-0">
-							Shipping<span>{{shiping}}</span></li>
-						<li
-							class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
-							<div>
-								<strong>Total</strong> <small>(including GST)</small>
-							</div>
-							<span><strong>{{alltotal}}</strong></span>
-						</li>
-					</ul>
-			<!-- </div> -->
-			<h4>Select Shipping Address</h4>
+			<h4>Total Amount</h4>
 			<hr>
-			<form action="" method="post">
-				{% csrf_token %}
-				{% for address in addreses %}
-				<div class="form-check mt-2 mb-2">
-				<!-- <div class="card"> -->
-					<input class="form-check-input " type="radio" id="addressinput" value="{{address}}" name="addressinput" required>
-					<label for="addresesinput" class="form-check-label fw-bold">
-					<!-- <div class="card"> -->
-						<h6 class="m-0">{{address.name}}</h6>
-						<p class="m-0">{{address.address1}}</p>
-						<p class="m-0"> {{address.zipcode}}</p>
-					<!-- </div> -->
-					</label>
-				<!-- </div> -->
-					<!-- <label class="form-check-label fw-bold" for="">
-						Address: 1 </label> -->
-				</div>
-				{% endfor %}
+			<ul class="list-group">
+				<li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 pb-0">
+					Amount<span>{{total}}</span></li>
+				<li class="list-group-item d-flex justify-content-between align-items-center px-0">
+					Shipping<span>{{shiping}}</span></li>
+				<li class="list-group-item d-flex justify-content-between align-items-center border-0 px-0 mb-3">
+					<div>
+						<strong>Total</strong> <small>(including GST)</small>
+					</div>
+					<span><strong>{{alltotal}}</strong></span>
+				</li>
+			</ul>
+			<!-- </div> -->
 				<div class="text-end">
-					<button type="submit" class="btn btn-warning mt-3 px-5 fw-bold" id="rzp-button1">Pay now</button>
+					<button type="button" class="btn btn-warning mt-3 px-5 fw-bold" id="rzp-button1">Pay now</button>
 				</div>
-			</form>
 		</div>
 	</div>
-	<small class="mt-2">Term and Condition: Before you proceed to the payment page, we kindly ask you to review our terms and conditions outlined below. By accessing this website and/or making a purchase, you agree to be bound by these terms. Please take a moment to familiarize yourself with our policies regarding product availability, pricing, orders, payment, delivery, returns, intellectual property, privacy, and governing law. If you have any questions or concerns, don't hesitate to contact us. Your satisfaction and understanding are important to us.</small>
-<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
-<script>
-var options = {
-    "key": "rzp_test_NK5x7XMB4R6nGT", // Enter the Key ID generated from the Dashboard
-    "amount": "{{payment.amount}}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
-    "currency": "INR",
-    "name": "Prestocart", //your business name
-    "description": "Test Transaction",
-    "image": "{% static 'app/images/emptycart.png' %}",
-    "order_id": "{{payment.id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
-	"handler": function (response){
-		console.log('success')
-		window.location.href = 'http://127.0.0.1:8000/'
-        // alert(response.razorpay_payment_id);
-        // alert(response.razorpay_order_id);
-        // alert(response.razorpay_signature)
-    },
-    "callback_url": "http://127.0.0.1:8000/payment/success/?order_id={{payment.id}}",
-    "prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
-        "name": "Gaurav Kumar", //your customer's name
-        "email": "gaurav.kumar@example.com",
-        "contact": "9000090000" //Provide the customer's phone number for better conversion rates 
-    },
-    "notes": {
-        "address": "Razorpay Corporate Office"
-    },
-    "theme": {
-        "color": "#3399cc"
-    }
-};
-var rzp1 = new Razorpay(options);
-document.getElementById('rzp-button1').onclick = function(e){
-	 var radios = document.getElementsByName('addressinput');
-    var formValid = false;
-
-    for (var i = 0; i < radios.length; i++) {
-        if (radios[i].checked) {
-            formValid = true;
-            break;
-        }
-    }
-
-    if (!formValid) {
-        alert('Please select an address.');
-        e.preventDefault(); // Prevent the form from being submitted
-        return;
-    }
-    rzp1.open();
-    e.preventDefault();
-}
-</script>
+	<small class="mt-2">Term and Condition: Before you proceed to the payment page, we kindly ask you to review our
+		terms and conditions outlined below. By accessing this website and/or making a purchase, you agree to be bound
+		by these terms. Please take a moment to familiarize yourself with our policies regarding product availability,
+		pricing, orders, payment, delivery, returns, intellectual property, privacy, and governing law. If you have any
+		questions or concerns, don't hesitate to contact us. Your satisfaction and understanding are important to
+		us.</small>
+	<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+	<script>
+		var options = {
+			"key": "rzp_test_NK5x7XMB4R6nGT", // Enter the Key ID generated from the Dashboard
+			"amount": "{{payment.amount}}", // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+			"currency": "INR",
+			"name": "Prestocart", //your business name
+			"description": "Test Transaction",
+			"image": "{% static 'app/images/emptycart.png' %}",
+			"order_id": "{{payment.id}}", //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+			"handler": function (response) {
+				console.log('success')
+				window.location.href = 'http://127.0.0.1:8000/payment-status/?order_id={{payment.id}}'
+				// alert(response.razorpay_payment_id);
+				// alert(response.razorpay_order_id);
+				// alert(response.razorpay_signature)
+			},
+			"callback_url": "http://127.0.0.1:8000/payment-status/?order_id={{payment.id}}",
+			"prefill": { //We recommend using the prefill parameter to auto-fill customer's contact information especially their phone number
+				"name": "", //your customer's name
+				"email": "{{request.user.email}}",
+				"contact": "" //Provide the customer's phone number for better conversion rates 
+			},
+			"notes": {
+				"address": "Razorpay Corporate Office"
+			},
+			"theme": {
+				"color": "#3399cc"
+			}
+		};
+		var rzp1 = new Razorpay(options);
+		document.getElementById('rzp-button1').onclick = function (e) {
+			var radios = document.getElementsByName('addressinput');
+			rzp1.open();
+			e.preventDefault();
+		}
+	</script>
 </div>
 
 {% endblock main-content %}

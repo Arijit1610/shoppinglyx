@@ -2,22 +2,26 @@
 {% load static %}
 {% block title %}Cart{% endblock title %}
 {% block main-content %}
-<div class="container my-5">
-	<div class="row" style="margin-top: 5vh;padding-top: 1.6vh;"">
+
+<div class="mt-5">
+	<div class="row" ">
   <h1 class=" text-center mb-5">Shopping Cart</h1>
 		<div class="col-sm-8">
-			<div class="card">
+			<div class="card" style="margin-left: 4px;">
 				<div class="card-body">
 					<h3>Cart</h3>
 					{% if items %}
 					{% for item in items %}
 					<div class="row">
-						<div class="col-sm-3 text-center align-self-center"><img
-								src="{{item.product_id.photo1.url}}" alt="" srcset=""
-								class="img-fluid img-thumbnail shadow-sm" height="150" width="150"> </div>
+						<div class="col-sm-3 text-center align-self-center"><img src="{{item.product_id.photo1.url}}"
+								alt="" srcset="" class="img-fluid img-thumbnail shadow-sm" height="150" width="150">
+						</div>
 						<div class="col-sm-9">
 							<div>
-								<h5>{{item.product_id.product_name}}</h5>
+								<a href="{% url 'productdetail'  productid=item.product_id.id %}" class=""
+									style="text-decoration: none; color: black;">
+									<h5>{{item.product_id.product_name}}</h5>
+								</a>
 								{% if item.product_id.qty >= item.qty %}
 								<p class="mb-2 text-success small ">in-stock</p>
 								{% else %}
@@ -38,14 +42,16 @@
 					</div>
 					<hr class="text-muted">
 					{% endfor %}
+					{% else %}
+					shop now to add product in the cart
 					{% endif %}
 
 				</div>
 			</div>
 		</div>
 
-		
-<div class="col-sm-4">
+
+		<div class="col-sm-4">
 			<div class="card">
 				<div class="card-body">
 					<h3>The Total Amount of</h3>
@@ -65,11 +71,39 @@
 					</ul>
 					<div class="d-grid">
 						{% if noofitems %}
-						<a href="{% url 'checkout' %}" class="btn btn-primary" >Place Order</a></div>
-						{% else %}
-						<button href="{% url 'checkout' %}" class="btn btn-primary" disabled>Place Order</button></div>
-						{% endif %}
+						<h4>Select Shipping Address</h4>
+						<hr>
+						<form action="" method="post" onsubmit="">
+							{% csrf_token %}
+							{% for address in addreses %}
+							<div class="form-check mt-2 mb-2">
+								<!-- <div class="card"> -->
+								<input class="form-check-input " type="radio" id="addressinput" value="{{address.id}}"
+									name="addressinput" required>
+								<label for="addresesinput" class="form-check-label fw-bold">
+									<!-- <div class="card"> -->
+									<h6 class="m-0">{{address.name}}</h6>
+									<p class="m-0">{{address.address1}}</p>
+									<p class="m-0"> {{address.zipcode}}</p>
+									<!-- </div> -->
+								</label>
+								<!-- </div> -->
+								<!-- <label class="form-check-label fw-bold" for="">
+						Address: 1 </label> -->
+							</div>
+							{% endfor %}
+							<div class="text-end">
+								<button type="submit" class="btn btn-warning mt-3 px-5 fw-bold">Place Order</button>
+							</div>
+						</form>
+
+					</div>
+					{% else %}
+					<button href="{% url 'checkout' %}" class="btn btn-primary mt-3 px-5 fw-bold" disabled>Place
+						Order</button>
 				</div>
+				{% endif %}
+
 			</div>
 		</div>
 	</div>

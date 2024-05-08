@@ -16,6 +16,7 @@ from .models import *
 import razorpay
 from django.conf import settings
 from django.views.decorators.csrf import csrf_exempt
+from django.utils import timezone
 
 client = razorpay.Client(
 	auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
@@ -87,6 +88,7 @@ def add_to_cart(request):
 	User = get_user_model()
 	user_instance = User.objects.get(id=request.user.id)
 	carts = Addtocart.objects.filter(userid=user_instance)
+	addreses = Address.objects.filter(userid = user_instance)
 	# products = Product.objects.all()
 	print(len(carts))
 	total = 0
@@ -96,6 +98,14 @@ def add_to_cart(request):
 			total = total + (cart.product_id.discountprice() * cart.qty)
 			shiping = shiping + (cart.qty*40)
 	alltotal = total+shiping
+	if request.method == 'POST':
+		addressid = request.POST.get('addressinput')
+		print(addressid)
+		for cart in carts:
+			cart.addresssid = Address.objects.get(id = addressid)
+			cart.save()
+		return redirect('checkout')
+	
 	
 
 	context = {
@@ -104,6 +114,7 @@ def add_to_cart(request):
 		"shiping": shiping,
 		"alltotal": alltotal,
 		"noofitems" : len(carts),
+		"addreses" : addreses 
 	}
 	return render(request, 'app/addtocart.html',context)
 @login_required(login_url="login")
@@ -117,8 +128,9 @@ def product_add_to_cart(request,productid):
 	except:
 		cart = Addtocart(userid=user_instance, product_id = product, qty = 1)
 	cart.save()
-	return HttpResponse("Product added to cart")
-
+	messages.success(request,f"{cart.product_id.product_name[:10]} successfully added to your cart")
+	return redirect('add-to-cart')
+@login_required(login_url="login")
 def buy_now(request):
 	return render(request, 'app/buynow.html')
 @login_required(login_url="login")
@@ -147,7 +159,7 @@ def profile(request):
 	}
 
 	return render(request, 'app/profile.html',context)
-
+@login_required(login_url="login")
 def address(request):
 	carts = []
 	addreses = []
@@ -167,7 +179,7 @@ def address(request):
 	}
 
 	return render(request, 'app/address.html',context)
-
+@login_required(login_url="login")
 def orders(request):
 	carts = []
 
@@ -175,12 +187,16 @@ def orders(request):
 	if request.user.is_authenticated:
 		user_instance = User.objects.get(id=request.user.id)
 		carts = Addtocart.objects.filter(userid=user_instance)
+		orders = Orders.objects.filter(userid = user_instance).order_by('-created_at')
 	else:
 		# Handle the case where the user does not exist
 		user_instance = None
 	context = {
 		# "products": products,
-		"noofitems" : len(carts)
+		"noofitems" : len(carts),
+		"items" : orders,
+		'now': timezone.now(),
+
 	}
 
 	# orders = Orders(product_type =  )
@@ -209,6 +225,9 @@ def mobile(request):
 	return render(request, 'app/mobile.html',context)
 
 def loginpage(request):
+	messages.info(request,"Welcome to Prestocart. Please log in to access your account, access exclusive features and content." )
+	next = request.GET.get('next')
+	print(next)
 	if request.user.is_authenticated:
 		return redirect('home')
 	form = UserLoginForm()
@@ -226,9 +245,9 @@ def loginpage(request):
 				print(password)
 				print(user.password)
 				login(request, user)
-				messages.success(request, f"Hello <b>{user.username}</b>! You have been logged in")
+				messages.success(request, f"Hello {user.username}! You have been logged in")
 				print("login Sucessess")
-				return redirect('home')
+				return redirect(next)
 			except:
 				print("block2")
 				user = authenticate(
@@ -238,9 +257,9 @@ def loginpage(request):
 				print(user.password)
 				login(request, user)
 				print("newblock")
-				messages.success(request, f"Hello <b>{user.username}</b>! You have been logged in")
+				messages.success(request, f"Hello {user.username}! You have been logged in")
 				print("login Sucessess")
-				return redirect('home')
+				return redirect(next)
 		except:
 			try:
 				print("block4")
@@ -263,6 +282,7 @@ def loginpage(request):
 	return render(request, "app/login.html", context)
 @login_required(login_url="login")
 def logoutpage(request):
+	messages.info(request,"You have successfully logged out. Thank you for visiting. We look forward to welcoming you back soon. Have a great day!" )
 	logout(request)
 	return redirect('home')
 def customerregistration(request):
@@ -294,10 +314,13 @@ def customerregistration(request):
 			password_error = None
 			if 'username' in errors:
 				username_error = errors['username'][0]
+				messages.error(request, username_error)
 			if 'email' in errors:
 				email_error = errors['email'][0]
+				messages.error(request,email_error )
 			if 'password1' in errors or 'password2' in errors:
 				password_error = "Password validation failed."
+				messages.error(request, password_error)
 			return render(request, 'app/customerregistration.html', {'form': form, 'username_error': username_error, 'email_error': email_error, 'password_error': password_error})
 	else:
 		print("elseblock2")
@@ -333,9 +356,7 @@ def checkout(request):
 		cart.rozorpay_order_id = payment['id']
 		cart.save()
 	print(payment['id'])
-	if request.method == 'POST':
-		addressid = request.POST.get('addressinput')
-		print(addressid)
+	
 	# allorder = client.order.fetch('order_O3eyrIuiNq7XkM')
 	# print(allorder)
 
@@ -377,8 +398,6 @@ def activate(request, uidb64, token):
 
 	return redirect('login')
 
-
-
 def searchProducts(request):
 	carts = []
 
@@ -410,8 +429,8 @@ def searchProducts(request):
 		"noofitems" : len(carts)
 	}
 	
-	return render(request, 'app/search_results.html', context)\
-
+	return render(request, 'app/search_results.html', context)
+@login_required(login_url="login")
 @csrf_exempt
 def success(request):
 	order_id = request.GET.get('order_id')
@@ -423,12 +442,39 @@ def success(request):
 	# print(carts)
 	if carts:
 		for cart in carts:
-			# print(checkorder['status'])
+			# # print(checkorder['status'])
 			if checkorder['status'] == 'paid':
 				cart.is_paid = True
 				cart.save()
-				return HttpResponse("payment success")
+				User = get_user_model()
+				print("hello")
+				print(User)
+				user_instance = User.objects.get(id=request.user.id)
+				order = Orders(userid = user_instance, product_id = cart.product_id, qty = cart.qty, status = "Pending" , address= cart.addresssid)
+				order.save()
+				product = Product.objects.get(id =order.product_id.id)
+				product.qty = product.qty - order.qty
+				product.save()
+				cart.delete()
 			else:
 				return HttpResponse("payment failed")
+		messages.success(request,'"Thank you for your order! Your order has been placed.')
+		return redirect('orders')
 	else:
 		return HttpResponse("Something went Wrong")
+@login_required(login_url="login")
+def cancel(request):
+	orderid = request.GET.get('orderid')
+	order = Orders.objects.get(id=orderid)
+	if order.status == 'Delivered':
+		order.status = 'Returned'
+	else:
+		order.status = 'Canceled'
+	product = Product.objects.get(id =order.product_id.id)
+	product.qty = product.qty + order.qty
+	# order.product_id.qty = order.product_id.qty + 
+	order.save()
+	product.save()
+	messages.success(request, "Your order has been successfully cancelled/Returned. If you have any questions, please feel free to contact us. Thank you for shopping with us.")
+	return redirect('orders')
+	

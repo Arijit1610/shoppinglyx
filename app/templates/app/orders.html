@@ -1,22 +1,83 @@
 {% extends 'app/base.html' %}
 {% load static %}
-{% block title %}Buy Now{% endblock title %}
+{% block title %}Orders & Returns{% endblock title %}
 {% block main-content %}
-<div class="container " style="margin-top: 7vh;padding-top: 1.3vh;">
- <div class="row">
- <h3>Welcome Sonam</h3>
-  <div class="col-sm-2 border-end">
-   <ul class="list-unstyled">
-    <li class="d-grid"><a href="{% url 'orders' %}" class="btn btn-primary">Orders</a></li>
-   </ul>
-  </div>
-  <div class="col-sm-9 offset-sm-1">
-   <div class="row">
-    <div class="col-sm-6">Order 1</div>
-    <div class="col-sm-6">Order 2</div>
-    <div style="min-height: 80vh;"></div>
-   </div>
-  </div>
- </div>
+<div class="container" style="padding: 2vh;">
+	<div class="row">
+		<h3>Welcome {{request.user.first_name}}</h3>
+		<div class="col-sm-2 border-end">
+			<ul class="list-unstyled">
+				<li class="d-grid"><a href="{% url 'orders' %}" class="btn btn-primary">Orders</a></li>
+			</ul>
+		</div>
+		<div class="col-sm-9 offset-sm-1">
+			<div class="row">
+				{% if items %}
+				{% for item in items %}
+				<div class="row">
+					<div class="col-sm-3 text-center align-self-center"><img src="{{item.product_id.photo1.url}}" alt=""
+							srcset="" class="img-fluid img-thumbnail shadow-sm" height="150" width="150">
+					</div>
+					<div class="col-sm-9">
+						<div>
+							<a href="{% url 'productdetail'  productid=item.product_id.id %}" class="" style="text-decoration: none; color: black;">
+								<h5>{{item.product_id.product_name}}</h5>
+							</a>
+							<p class="mb-2 text-success small ">{{item.status}}</p>
+							<div class="my-3">
+								<label for="quantity">Quantity:</label>
+								<!-- <a class="minus-cart btn"><i class="fas fa-minus-square fa-lg"></i></a> -->
+								<span id="quantity">{{item.qty}}</span>
+								<!-- <a class="plus-cart btn"><i class="fas fa-plus-square fa-lg"></i></a> -->
+							</div>
+							{% if item.delivery_date > now %}
+							{%if item.status != "Canceled" %}
+							<h6>Arriving on {{ item.delivery_date|date:"M d" }}</h6>
+							{% endif %}
+							{% else %}
+							{%if item.status != "Canceled" %}
+							<h6>Arrived on {{ item.delivery_date|date:"M d" }}</h6>
+							{% endif %}
+							{% endif %}
+
+							<div class="d-flex justify-content-between">
+								<!-- {% if item.status == "Delivered" %}
+								<a href="#" class="btn btn-sm btn-secondary mr-3">Return product</a>
+								{% elif item.status == "Canceled" %}
+
+								{%else%}
+								<a href="#" class="btn btn-sm btn-secondary mr-3">Cancel order</a>
+								{% endif %} -->
+
+								{% if item.status == "Delivered" %}
+								{% if item.last_return_date > now %}
+								<a href="{% url 'ordercancel'%}?orderid={{item.id}}"
+									class="btn btn-sm btn-secondary mr-3">Return item</a>
+								{% else %}
+								<h6>Product cannot be returned after one month of delivery.</h6>
+								{% endif %}
+								{% elif item.status != "Canceled" %}
+								{% if item.status != "Returned" %}
+								<a href="{% url 'ordercancel'%}?orderid={{item.id}}"
+									class="btn btn-sm btn-secondary mr-3">Cancel item</a>
+								{% endif %}
+								{% endif %}
+								<p class="mb-0"><span><strong>{{ item.total }}</strong></span></p>
+							</div>
+						</div>
+					</div>
+				</div>
+				<hr class="text-muted">
+				{% endfor %}
+				{% else %}
+				<div style="min-height: 80vh;"></div>
+				shop now to add product in the cart
+				{% endif %}
+				<!-- <div class="col-sm-6">Order 1</div>
+				<div class="col-sm-6">Order 2</div> -->
+				<!-- < -->
+			</div>
+		</div>
+	</div>
 </div>
 {% endblock main-content %}

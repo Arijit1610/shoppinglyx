@@ -17,5 +17,6 @@ urlpatterns = [
     path('checkout/', views.checkout, name='checkout'),
 	path('activate/<uidb64>/<token>', views.activate, name='activate'),
 	path('search/', views.searchProducts, name = 'search'),
-	path('payment/success/', views.success, name = 'success'),
+	path('payment-status/', views.success, name = 'success'),
+	path('order/cancel',views.cancel, name="ordercancel")
 ]
