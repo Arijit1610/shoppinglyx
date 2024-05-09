@@ -40,13 +40,12 @@ def activateEmail(request, user, to_email):
 def home(request):
 	fashion = Product.objects.filter(product_type__product_type ="Clothing")
 	eletronices = Product.objects.filter(product_type__product_type="Electronices")
-	print(fashion)
-	print(eletronices)
-	#  = Product.objects.filter(product_type = '')
-	# fashion = Product.objects.filter(product_type = 'clothing')
-	# fashion = Product.objects.filter(product_type = 'clothing')
+	sports = Product.objects.filter(product_type__product_type="Sports")
+	schoolitems = Product.objects.filter(product_type__product_type="Readings and School")
+	homeitems = Product.objects.filter(product_type__product_type="Home and Kitchen")
+	cosmetics = Product.objects.filter(product_type__product_type="Cosmetics")
 	carts = []
-
+	print(homeitems)
 	User = get_user_model()
 	if request.user.is_authenticated:
 		user_instance = User.objects.get(id=request.user.id)
@@ -57,7 +56,11 @@ def home(request):
 		# "products": products,
 		"noofitems" : len(carts),
 		"electronices" : eletronices,
-		"fashions" :fashion
+		"fashions" :fashion,
+		"sports" : sports,
+		"schoolitems" : schoolitems,
+		"homeitems" : homeitems,
+		"cosmetics" : cosmetics
 	}
 
 	return render(request, 'app/home.html', context)
@@ -478,3 +481,36 @@ def cancel(request):
 	messages.success(request, "Your order has been successfully cancelled/Returned. If you have any questions, please feel free to contact us. Thank you for shopping with us.")
 	return redirect('orders')
 	
+def RemoveItem(request):
+	cartid = request.GET.get('cartid')
+	cart = Addtocart.objects.get(id=cartid)
+	cart.delete()
+	messages.success(request, "Product has been removed from cart!! Add more products to cart")
+	return redirect('add-to-cart')
+
+def ChangenoofItem(request):
+	changetype= request.GET.get('changetype')
+	cartid = request.GET.get('cartid')
+	cart = Addtocart.objects.get(id=cartid)
+	if changetype == 'Increment':
+		cart.qty += 1
+	else:
+		cart.qty -= 1
+	cart.save()
+	return redirect(add_to_cart)
+
+def NewsLetter(request):
+	to_email = request.GET.get('to_email')
+	try:
+		mail_subject = 'Subscription Confirmation'
+		message = render_to_string('app/newsletter.html')
+		email = EmailMessage(mail_subject, message, to=[to_email])
+		email.content_subtype = 'html'  # Set the content type to HTML
+		email.send()
+		print('success')
+		messages.success(request, f'Mail sent successfully to {to_email}.')
+		return redirect(request.META.get('HTTP_REFERER', '/'))
+	except Exception as e:
+		print('failed')
+		messages.error(request, f'Failed to send email: {e}.')
+	return redirect(request.META.get('HTTP_REFERER', '/'))

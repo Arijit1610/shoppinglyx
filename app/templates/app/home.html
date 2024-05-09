@@ -114,24 +114,24 @@
 	<h2>Best Deals on Cosmetics</h2>
 	<!-- Slider 2 -->
 	<div class="owl-carousel" id="slider2">
-		{% for cosmetics in cosmeticses %}
-		<a href="{% url 'productdetail' producttype=cosmetics.product_type productid=cosmetics.id %}" class="btn">
-			<div class="item"><img src="{{cosmetics.photo1.url}}" alt="" height="200px"><span
-					class="">{{cosmetics.product_name|slice:":7" }}</span><br><span class="fs-5">{{cosmetics.discountprice}}</span>
+		{% for cosmetic in cosmetics %}
+		<a href="{% url 'productdetail' productid=cosmetic.id %}" class="btn">
+			<div class="item"><img src="{{cosmetic.photo1.url}}" alt="" height="200px"><span
+					class="">{{cosmetic.product_name|slice:":7" }}</span><br><span class="fs-5">{{cosmetic.discountprice}}</span>
 			</div>
 		</a>
 		{% endfor %}
 	</div>
 </div>
 <div class="mx-3">
-	<h2>Trending Deals on Home and Kitchen Items</h2>
+	<h2>Trending Deals on Home & Kitchen Items</h2>
 	<!-- Slider 2 -->
 	<div class="owl-carousel" id="slider2">
-		{% for homeandkitchen in homeandkitchens %}
-		<a href="{% url 'productdetail' producttype=homeandkitchen.product_type productid=homeandkitchen.id %}"
+		{% for homeandkitchen in homeitems %}
+		<a href="{% url 'productdetail' productid=homeandkitchen.id %}"
 			class="btn">
 			<div class="item"><img src="{{homeandkitchen.photo1.url}}" alt="" height="200px"><span
-					class="">{{homeandkitchen.product_name|slice:":7" }}</span><br><span
+					class="">{{homeandkitchen.product_name|slice:":7" }} ...</span><br><span
 					class="fs-5">{{homeandkitchen.discountprice}}</span>
 			</div>
 		</a>
@@ -143,8 +143,8 @@
 	<h2>Best on Readings and School Items</h2>
 	<!-- Slider 2 -->
 	<div class="owl-carousel" id="slider2">
-		{% for book in books %}
-		<a href="{% url 'productdetail' producttype=book.product_type productid=book.id %}" class="btn">
+		{% for book in schoolitems %}
+		<a href="{% url 'productdetail' productid=book.id %}" class="btn">
 			<div class="item"><img src="{{book.photo1.url}}" alt="" height="200px"><span
 					class="">{{book.product_name|slice:":7" }}</span><br><span class="fs-5">{{book.discountprice}}</span>
 			</div>
@@ -153,11 +153,11 @@
 	</div>
 </div>
 <div class="mx-3">
-	<h2>Trending Deals Sports items</h2>
+	<h2>Trending Deals on Sports items</h2>
 	<!-- Slider 2 -->
 	<div class="owl-carousel" id="slider2">
 		{% for sport in sports %}
-		<a href="{% url 'productdetail' producttype=sport.product_type productid=sport.id %}" class="btn">
+		<a href="{% url 'productdetail' productid=sport.id %}" class="btn">
 			<div class="item"><img src="{{sport.photo1.url}}" alt="" height="200px"><span
 					class="">{{sport.product_name|slice:":7" }}</span><br><span class="fs-5">{{sport.discountprice}}</span>
 			</div>

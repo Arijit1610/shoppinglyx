@@ -29,13 +29,18 @@
 								{% endif %}
 								<div class="my-3">
 									<label for="quantity">Quantity:</label>
-									<a class="minus-cart btn"><i class="fas fa-minus-square fa-lg"></i></a>
+									<a href="{% url 'change' %}?cartid={{item.id}}&changetype=decrement"
+										class="minus-cart btn" {% if item.qty <= 1 %} style="pointer-events: none;
+    opacity: 0.5;" aria-disabled="true" {% endif %}><i class="fas fa-minus-square fa-lg"></i></a>
 									<span id="quantity">{{item.qty}}</span>
-									<a class="plus-cart btn"><i class="fas fa-plus-square fa-lg"></i></a>
+									<a href="{% url 'change' %}?cartid={{item.id}}&changetype=Increment"
+										class="plus-cart btn" {% if item.product_id.qty <= item.qty %} style="pointer-events: none;
+    opacity: 0.5;" aria-disabled="true" {% endif %}><i class="fas fa-plus-square fa-lg"></i></a>
 								</div>
 								<div class="d-flex justify-content-between">
-									<a href="#" class="btn btn-sm btn-secondary mr-3">Remove item </a>
-									<p class="mb-0"><span><strong>{{ item.total }}</strong></span></p>
+									<p class="mb-0"><span><strong>Price: {{ item.product_id.discountprice }}</strong></span></p>
+									<a href="{% url 'removeitem' %}?cartid={{item.id}}"
+										class="btn btn-sm btn-danger mr-3">Remove item </a>
 								</div>
 							</div>
 						</div>

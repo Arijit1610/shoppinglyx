@@ -35,7 +35,7 @@
 			{% endif %}
 			<br>
 			<a href="{% url 'product_add-to-cart' productid=product.id %}" class="btn btn-primary shadow px-5 py-2">Add to Cart</a>
-			<a href="{% url 'buy-now' %}" class="btn btn-danger shadow px-5 py-2 ms-4">Buy Now</a>
+			<a href="{% url 'add-to-cart'%}" class="btn btn-danger shadow px-5 py-2 ms-4">Go to Cart</a>
 			<h5 class="mt-5">About this item</h5>
 			{{ product.features|linebreaksbr}}
 			  
