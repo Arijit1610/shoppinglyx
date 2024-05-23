@@ -2,7 +2,7 @@
 {% load static %}
 {% block title %}Product Detail{% endblock title %}
 {% block main-content %}
-<div class="container my-5">
+<!-- <div class="container my-5">
 	<div class="row" >
 		<div class="col-sm-6 text-center align-self-center">
 			<img src="{{product.photo1.url}}" style="position: relative;bottom: 150px;" alt="" class="img-fluid img-thumbnail">
@@ -42,6 +42,103 @@
 
 		</div>
 	</div>
+</div> -->
+<div class="container-fluid mt-2 ">
+	<div class="row align-items-center justify-content-center">
+		<div class="col-12 col-md-5 p-md-0">
+			<div class="row d-flex flex-column-reverse flex-md-row align-items-center ">
+				<!-- Column for image thumbnails -->
+				<div class="col-12 col-md-2 mt-2 mt-md-0">
+					<!-- Dynamic thumbnail container -->
+					<div class="row d-flex align-items-end justify-content-center" id="thumbnail-container"></div>
+				</div>
+
+				<!-- Column for the main product image -->
+				<div class="col-md-9 col-12 p-md-0 ">
+					<!-- Main product image, initially empty src -->
+					<img src="" class="img-fluid border border-dark " id="productImage" />
+				</div>
+			</div>
+		</div>
+		<!-- Column for product details and Add to Cart button -->
+		<div class="col-xl-6 col-lg-6 d-flex flex-column justify-content-center gap-3 px-3">
+			<!-- Product title and price -->
+			<div>
+				<h2>{{product.product_name}}</h2>
+			<hr>
+			<h6>Product Description:</h6>
+			<p style="text-align: justify;">
+				 {{product.description|linebreaksbr }}</p> <br>
+			<h4>&#8377 {{ product.discountprice }} <small class="fw-light text-decoration-line-through">
+					{{product.price}}</small><span style="color: red;">&nbsp; ({{product.discount}}% off)</span></h4>
+					{% if product.size1 %}
+			<h6 class="mt-5">Size:
+				<select name="size" id="size">
+					{% if product.size1 %}
+					<option value="{{ product.size1 }}">{{ product.size1 }}</option>
+					{% endif %}
+					{% if product.size2 %}
+					<option value="{{ product.size2 }}">{{ product.size2 }}</option>
+					{% endif %}
+					{% if product.size3 %}
+					<option value="{{ product.size3 }}">{{ product.size3 }}</option>
+					{% endif %}
+					{% if product.size4 %}
+					<option value="{{ product.size4 }}">{{ product.size4 }}</option>
+					{% endif %}
+				</select>
+			</h6>
+			{% endif %}
+			<br>
+			<a href="{% url 'product_add-to-cart' productid=product.id %}" class="btn btn-primary shadow px-5 py-2">Add to Cart</a>
+			<a href="{% url 'add-to-cart'%}" class="btn btn-danger shadow px-5 py-2 ms-4">Go to Cart</a>
+			<h5 class="mt-5">About this item</h5>
+			{{ product.features|linebreaksbr}}
+		</div>
+	</div>
 </div>
- 
+<!-- Including Bootstrap JS bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+	// Array of image URLs
+	const imgs = [
+		"{{product.photo1.url}}",
+		// "",
+		"https://rukminim2.flixcart.com/image/612/612/xif0q/smartwatch/o/w/8/-original-imagkjtjrren3tz5.jpeg?q=70",
+		"https://rukminim2.flixcart.com/image/612/612/xif0q/smartwatch/t/c/a/-original-imagzw9t5svbsuyw.jpeg?q=70",
+		"https://rukminim2.flixcart.com/image/612/612/xif0q/smartwatch/i/c/y/-original-imagyerv8mfrqwpa.jpeg?q=70",
+		"https://rukminim2.flixcart.com/image/612/612/xif0q/smartwatch/u/e/e/-original-imagtepucg9ceg8m.jpeg?q=70"
+	];
+	// Setting the initial product image
+	const productImage = document.getElementById("productImage");
+	productImage.src = imgs[0];
+
+	// Selecting the thumbnail container
+	const thumbnailContainer = document.getElementById("thumbnail-container");
+	// Generating thumbnail HTML and inserting it into the container
+	thumbnailContainer.innerHTML = imgs
+		.map(
+			(element, index) => `
+        <div class="col-md-12 col-2" id="${index}">
+          <img
+            class="img-fluid border border-dark addImage"
+            src="${element}"
+          />
+        </div>
+      `
+		)
+		.join("");
+
+	// Adding click event listeners to each thumbnail image
+	const addImage = document.querySelectorAll(".addImage");
+	addImage.forEach((image) => {
+		image.addEventListener("click", imageChange);
+	});
+
+	// Function to change the main product image on thumbnail click
+	function imageChange(e) {
+		console.log(e.target.src); // Logging the clicked thumbnail's src
+		productImage.src = e.target.src; // Updating the main product image
+	}
+</script>
 {% endblock main-content %}

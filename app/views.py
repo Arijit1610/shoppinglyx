@@ -250,11 +250,13 @@ def loginpage(request):
 				login(request, user)
 				messages.success(request, f"Hello {user.username}! You have been logged in")
 				print("login Sucessess")
-				return redirect(next)
+				if next:
+					return redirect(next)
+				else:
+					return redirect('home')
 			except:
 				print("block2")
-				user = authenticate(
-					request, username=username, password=password)
+				user = authenticate(request, username=username, password=password)
 				print("block3")
 				print(password)
 				print(user.password)
@@ -262,7 +264,10 @@ def loginpage(request):
 				print("newblock")
 				messages.success(request, f"Hello {user.username}! You have been logged in")
 				print("login Sucessess")
-				return redirect(next)
+				if next:
+					return redirect(next)
+				else:
+					return redirect('home')
 		except:
 			try:
 				print("block4")
