@@ -138,6 +138,7 @@ def buy_now(request):
 	return render(request, 'app/buynow.html')
 @login_required(login_url="login")
 def profile(request):
+	next = request.GET.get('next')
 	User = get_user_model()
 	if request.user.is_authenticated:
 		user_instance = User.objects.get(id=request.user.id)
@@ -153,6 +154,10 @@ def profile(request):
 	try:
 		address = Address(userid = user_instance, name = name, phonenumber = phonenumber, address1 = address1, address2 = address2, city = city, state = state, zipcode = zipcode)
 		address.save()
+		if next:
+			return redirect(next)
+		else:
+			return redirect('address')
 	except:
 		pass
 	context = {
